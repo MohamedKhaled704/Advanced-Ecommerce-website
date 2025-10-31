@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename='/Advanced-Ecommerce-website'>
     <QueryClientProvider client={queryClient}>
     <App />
     </QueryClientProvider>
