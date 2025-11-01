@@ -344,7 +344,7 @@ export default function AllProducts() {
             <div className={`${listSort? 'flex flex-col' : "grid lg:grid-cols-3 grid-cols-2"} gap-5`}>
               {data.map((item) => (
                 <div key={item.id} className={`${listSort? 'flex lg:flex-row items-center flex-col gap-x-12 overflow-x-auto min-w-full' : 'flex flex-col justify-between xs:items-center items-start flex-wrap gap-y-2'} `}>
-                <img src={item.img} alt={item.img} />
+                <picture className="flex flex-1"><img className="flex-1" src={item.img} alt={item.img} /></picture>
                 <div className={`${listSort? 'sm:flex-row flex-col gap-x-12 gap-y-2' : 'flex-col gap-2 items-start sm:items-center '} flex `}>
                 <div className={`${listSort? 'gap-x-12 sm:flex-row ' : 'gap-x-5'} flex flex-col gap-y-2 sm:items-center items-start`}>
                 <h4 className="capitalize font-semibold xs:text-[18px] text-[16px] leading-[1.5] text-[#393280] min-h-[48px] xs:min-h-0 ">{item.name}</h4>

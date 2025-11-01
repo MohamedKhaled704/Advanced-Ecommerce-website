@@ -157,16 +157,29 @@ export default function NewReleaseVariantA() {
             </span>
           </div>
           <div className="">
-            <Link to="" className="capitalize text-[#ED553B] text-[16px] font-bold tracking-wide flex items-center gap-x-2 scale-100 hover:scale-105"> view all products 
-            <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M10.0662 0L9.24158 0.856675L11.7499 3.40467H0V4.59533H11.7499L9.24217 7.14392L10.0662 8L14 4L10.0662 0Z" fill="#ED553B"/>
-</svg>
-
+            <Link
+              to="/books"
+              className="capitalize text-[#ED553B] text-[16px] font-bold tracking-wide flex items-center gap-x-2 scale-100 hover:scale-105"
+            >
+              {" "}
+              view all products
+              <svg
+                width="14"
+                height="8"
+                viewBox="0 0 14 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.0662 0L9.24158 0.856675L11.7499 3.40467H0V4.59533H11.7499L9.24217 7.14392L10.0662 8L14 4L10.0662 0Z"
+                  fill="#ED553B"
+                />
+              </svg>
             </Link>
           </div>
         </div>
         {/* End newrelease bottom */}
-        <hr className="mt-52"/>
+        <hr className="mt-52" />
       </div>
     </div>
   );

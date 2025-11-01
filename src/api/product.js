@@ -16,3 +16,8 @@ export const addProduct = async (newProduct) => {
     const res = await axios.post(BASE_URL, newProduct);
     return res.data
 }
+
+export const deleteProduct = async (productId) => {
+    const res = await axios.delete(`${BASE_URL}/${productId}`);
+    return res.data
+}
