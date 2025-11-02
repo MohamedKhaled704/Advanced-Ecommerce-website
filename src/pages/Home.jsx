@@ -5,9 +5,7 @@ import HeroVariantA from '../components/variantA/HeroVariantA'
 import CategoriesVariantA from '../components/variantA/CategoriesVariantA'
 import EbookVariantA from '../components/variantA/EbookVariantA'
 import NewReleaseVariantA from '../components/variantA/NewReleaseVariantA'
-import Signup from './Signup'
-import Dashboard from './Dashboard'
-import AllProducts from './AllProducts'
+import Featuredbook from '../components/variantA/Featuredbook'
 
 export default function Home() {
   return (
@@ -18,8 +16,7 @@ export default function Home() {
         <CategoriesVariantA />
         <EbookVariantA />
         <NewReleaseVariantA />
-        {/* <Dashboard /> */}
-        {/* <AllProducts /> */}
+        <Featuredbook />
     </div>
   )
 }
