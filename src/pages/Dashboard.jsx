@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { deleteProduct, fetchProducts } from "../api/product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  
+  const handleEdit = (product) => {
+    navigate("/form", { state: {product} });
+  }
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     if(window.confirm("Are you sure you want to delete this product?")) {
-  //     await deleteProduct(id);
-  //     setProducts((prev) => prev.filter((item) => item.id !== id));
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting the product", error);
-  //   }
-  // }
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
@@ -106,7 +101,7 @@ export default function Dashboard() {
                       <button className="text-blue-600 hover:text-blue-800 font-medium">
                         View
                       </button>
-                      <button className="text-yellow-600 hover:text-yellow-800 font-medium">
+                      <button onClick={() => handleEdit(item)} className="text-yellow-600 hover:text-yellow-800 font-medium">
                         Edit
                       </button>
                       <button onClick={() => handleDelete(item.id)} disabled={deleteMutation.isPending} className="capitalize text-red-600 hover:text-red-800 font-medium">
