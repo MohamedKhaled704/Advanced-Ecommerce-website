@@ -1,21 +1,30 @@
-import React from "react";
-import { fetchProducts } from "../../api/product";
+import React, { useState } from "react";
+// import { fetchProducts } from "../../api/product";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-// import image1 from '../../assets/images/book5 4.png'
-// import image2 from '../../assets/images/book3 4.png'
-// import image3 from '../../assets/images/book16 1.png'
-// import image4 from '../../assets/images/book4 4.png'
+import axios from "axios";
+
 
 export default function NewReleaseVariantA() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  const slicedProducts = async () => {
+    const res = await axios.get('https://6900f2b5ff8d792314bc19f7.mockapi.io/products');
+    return res.data.slice(0, 12)
+  }
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["products"],
-    queryFn: fetchProducts,
+    queryFn: slicedProducts,
   });
-  console.log(data);
 
   if (isLoading) return <p>Loading... </p>;
   if (error) return <p>Error in loading products</p>;
+
+  const slideProducts = [];
+  for (let i = 0; i < data.length; i += 3) {
+    slideProducts.push(data.slice(i, i + 3))
+  }
 
   return (
     <div>
@@ -55,7 +64,8 @@ export default function NewReleaseVariantA() {
 
         {/* Start newrelease main */}
         <div className="mt-16 grid xl:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-6">
-          {data.map((item) => (
+          {/* {data.map((item) => ( */}
+          {slideProducts[currentSlide]?.map((item) => (
             <div key={item.id} className="flex flex-col gap-y-4 items-center">
               <div className="border border-[#EAE8DF] shadow-[0_4px_10px_0_rgba(0,0,0,0.15)]">
                 <picture>
@@ -74,7 +84,7 @@ export default function NewReleaseVariantA() {
               {/* Product price */}
               <div>
                 <span className="font-bold text-[18px] text-[#ED553B]">
-                  ${item.price}
+                  ${Number(item.price).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -87,7 +97,8 @@ export default function NewReleaseVariantA() {
         {/* Start newrelease bottom */}
         <div className="flex flex-row items-center justify-between pt-6 pb-3 pe-1">
           <div className="flex sm:justify-center flex-1 gap-x-3 sm:ms-0 ms-3">
-            <span className="group flex justify-center items-center hover:w-[39px] h-[39px] rounded-[50%] border-[#ED553B] cursor-pointer hover:border">
+            {slideProducts.map((_, index) => (
+            <span key={index} onClick={() => setCurrentSlide(index)} className={`${currentSlide === index? 'bg-[#ED553B] w-[39px]' : ''} group flex justify-center items-center hover:w-[39px] h-[39px] rounded-[50%] border-[#ED553B] cursor-pointer hover:border`}>
               <svg
                 width="13"
                 height="13"
@@ -104,57 +115,7 @@ export default function NewReleaseVariantA() {
                 />
               </svg>
             </span>
-            <span className="group flex justify-center items-center hover:w-[39px] h-[39px] rounded-[50%] border-[#ED553B] cursor-pointer hover:border">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 13 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="6.5"
-                  cy="6.5"
-                  r="6.5"
-                  fill="#BEBEBE"
-                  className="group-hover:fill-[#ED553B]"
-                />
-              </svg>
-            </span>
-            <span className="group flex justify-center items-center hover:w-[39px] h-[39px] rounded-[50%] border-[#ED553B] cursor-pointer hover:border">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 13 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="6.5"
-                  cy="6.5"
-                  r="6.5"
-                  fill="#BEBEBE"
-                  className="group-hover:fill-[#ED553B]"
-                />
-              </svg>
-            </span>
-            <span className="group flex justify-center items-center hover:w-[39px] h-[39px] rounded-[50%] border-[#ED553B] cursor-pointer hover:border">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 13 13"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="6.5"
-                  cy="6.5"
-                  r="6.5"
-                  fill="#BEBEBE"
-                  className="group-hover:fill-[#ED553B]"
-                />
-              </svg>
-            </span>
+            ))}
           </div>
           <div className="">
             <Link
@@ -179,7 +140,6 @@ export default function NewReleaseVariantA() {
           </div>
         </div>
         {/* End newrelease bottom */}
-        <hr className="mt-52" />
       </div>
     </div>
   );
