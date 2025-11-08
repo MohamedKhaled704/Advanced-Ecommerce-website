@@ -63,12 +63,12 @@ export default function NewReleaseVariantA() {
         {/* End newrelease top "text" */}
 
         {/* Start newrelease main */}
-        <div className="mt-16 grid xl:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-6">
+        <div className="mt-16 grid sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-6">
           {/* {data.map((item) => ( */}
           {slideProducts[currentSlide]?.map((item) => (
             <div key={item.id} className="flex flex-col gap-y-4 items-center">
-              <div className="border border-[#EAE8DF] shadow-[0_4px_10px_0_rgba(0,0,0,0.15)]">
-                <picture>
+              <div className="border border-[#EAE8DF] shadow-[0_4px_10px_0_rgba(0,0,0,0.15)] contents">
+                <picture className="flex" style={{flex: '1 1 50%'}}>
                   <img src={item.img} alt="book image" />
                 </picture>
               </div>
@@ -84,7 +84,7 @@ export default function NewReleaseVariantA() {
               {/* Product price */}
               <div>
                 <span className="font-bold text-[18px] text-[#ED553B]">
-                  ${Number(item.price).toFixed(2)}
+                  $ {Number(item.price).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function NewReleaseVariantA() {
                   cy="6.5"
                   r="6.5"
                   fill="#BEBEBE"
-                  className="group-hover:fill-[#ED553B]"
+                  className={`${currentSlide === index? 'fill-[white]' : ''}`}
                 />
               </svg>
             </span>

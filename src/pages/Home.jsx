@@ -6,6 +6,7 @@ import CategoriesVariantA from '../components/variantA/CategoriesVariantA'
 import EbookVariantA from '../components/variantA/EbookVariantA'
 import NewReleaseVariantA from '../components/variantA/NewReleaseVariantA'
 import Featuredbook from '../components/variantA/Featuredbook'
+import Offer from '../components/variantA/Offer'
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
         <EbookVariantA />
         <NewReleaseVariantA />
         <Featuredbook />
+        <Offer />
     </div>
   )
 }
