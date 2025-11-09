@@ -2,10 +2,20 @@ import React, { useEffect, useState } from "react";
 import { deleteProduct, fetchProducts } from "../api/product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { useDebounce } from "../hooks/useDebounce"
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const [searchValue, setSearchValue] = useState("")
+  const debouncedSearch = useDebounce(searchValue, 1000)
+
+
+  const { data: products = [], isLoading, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
   
   const handleEdit = (product) => {
     navigate("/form", { state: {product} });
@@ -24,13 +34,15 @@ export default function Dashboard() {
       deleteMutation.mutate(id);
     }
   }
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
-  if (isLoading) return <p>Loading</p>;
-  if (error) return <p>Error in fetching products</p>;
+  
 
+      const filtered = products.filter((product) => 
+        product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
+
+
+if (isLoading) return <p>Loading</p>;
+if (error) return <p>Error in fetching products</p>;
 
   return (
     <div>
@@ -44,9 +56,11 @@ export default function Dashboard() {
               type="text"
               name=""
               id=""
+              value={searchValue}
               role="search"
               placeholder="Search product by name"
               className="font-semibold xs:text-[18px] text-[16px] tracking-wide py-3 px-2 rounded-2xl bg-[#F6F6F6] outline-none min-w-56 max-w-screen-md w-full "
+              onChange={(e) => setSearchValue(e.target.value)}
             />
             <input
               type="submit"
@@ -79,7 +93,7 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {data.map((item) => (
+                {filtered.map((item) => (
                   <tr key={item.id} className="divide-x">
                     <td className="capitalize text-center px-2 py-3">{item.id}</td>
                     <td className="capitalize px-2 py-3">{item.name}</td>

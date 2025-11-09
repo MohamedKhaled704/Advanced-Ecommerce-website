@@ -7,6 +7,8 @@ import EbookVariantA from '../components/variantA/EbookVariantA'
 import NewReleaseVariantA from '../components/variantA/NewReleaseVariantA'
 import Featuredbook from '../components/variantA/Featuredbook'
 import Offer from '../components/variantA/Offer'
+import Subscribe from '../components/variantA/Subscribe'
+import Blogs from '../components/variantA/Blogs'
 
 export default function Home() {
   return (
@@ -19,6 +21,8 @@ export default function Home() {
         <NewReleaseVariantA />
         <Featuredbook />
         <Offer />
+        <Subscribe />
+        <Blogs />
     </div>
   )
 }
