@@ -9,6 +9,7 @@ import Featuredbook from '../components/variantA/Featuredbook'
 import Offer from '../components/variantA/Offer'
 import Subscribe from '../components/variantA/Subscribe'
 import Blogs from '../components/variantA/Blogs'
+import FooterVariantA from '../components/variantA/FooterVariantA'
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         <Offer />
         <Subscribe />
         <Blogs />
+        <FooterVariantA />
     </div>
   )
 }
