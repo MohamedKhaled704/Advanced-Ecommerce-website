@@ -8,6 +8,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const [viewProduct, setViewProduct] = useState(false);
+  const [viewedProduct, setViewedProduct] = useState(null);
+  
+
   const [searchValue, setSearchValue] = useState("")
   const debouncedSearch = useDebounce(searchValue, 1000)
 
@@ -40,12 +44,17 @@ export default function Dashboard() {
         product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     );
 
+    const handleView = (product) => {
+      setViewedProduct(product);
+      setViewProduct(!viewProduct)
+    }
+
 
 if (isLoading) return <p>Loading</p>;
 if (error) return <p>Error in fetching products</p>;
 
   return (
-    <div>
+    <div className="relative">
       <div className="mt-3 container">
         <h1 className="capitalize text-center font-semibold text-6xl text-[#393280]">
           welcome admin{" "}
@@ -112,7 +121,7 @@ if (error) return <p>Error in fetching products</p>;
                       {item.img}
                     </td>
                     <td className="text-center px-2 py-3 space-x-2 space-y-2">
-                      <button className="text-blue-600 hover:text-blue-800 font-medium">
+                      <button className="text-blue-600 hover:text-blue-800 font-medium" onClick={() => handleView(item)}>
                         View
                       </button>
                       <button onClick={() => handleEdit(item)} className="text-yellow-600 hover:text-yellow-800 font-medium">
@@ -129,6 +138,71 @@ if (error) return <p>Error in fetching products</p>;
           </div>
         </div>
       </div>
+      {/* View Product layer */}
+     
+      {viewedProduct && viewProduct && (
+  <div
+    className="fixed inset-0 z-30 bg-black/50 flex items-start sm:items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="view-product-title"
+    onClick={(e) => {
+      if (e.target === e.currentTarget) {
+        setViewProduct(false);
+        setViewedProduct(null);
+      }
+    }}
+  >
+    <div className="bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="flex items-center justify-between bg-[#393280] text-white px-4 py-2">
+        <h3 id="view-product-title" className="text-sm sm:text-base uppercase tracking-wide">
+          Book id: #{viewedProduct.id}
+        </h3>
+        <button
+          onClick={() => { setViewProduct(false); setViewedProduct(null); }}
+          className="p-1 rounded hover:bg-white/10 transition"
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div className="p-4 overflow-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+          <div className="sm:col-span-1 flex justify-center">
+            <div className="w-32 h-40 sm:w-40 sm:h-56 bg-gray-100 rounded overflow-hidden flex items-center justify-center">
+              <img
+                src={viewedProduct.img}
+                alt={viewedProduct.name || 'product image'}
+                className="object-contain w-full h-full"
+              />
+            </div>
+          </div>
+
+          <div className="sm:col-span-2 flex flex-col gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2 items-start">
+              <div className="text-xs font-semibold uppercase text-gray-500">Book name:</div>
+              <div className="sm:col-span-2 text-base text-[#393280] capitalize">{viewedProduct.name}</div>
+
+              <div className="text-xs font-semibold uppercase text-gray-500">Writer:</div>
+              <div className="sm:col-span-2 capitalize">{viewedProduct.writer}</div>
+
+              <div className="text-xs font-semibold uppercase text-gray-500">Price:</div>
+              <div className="sm:col-span-2">{viewedProduct.price}$</div>
+
+              <div className="text-xs font-semibold uppercase text-gray-500">Description:</div>
+              <div className="capitalize sm:col-span-2 text-sm text-gray-700 leading-relaxed max-h-40 overflow-auto">
+                {viewedProduct.description}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
