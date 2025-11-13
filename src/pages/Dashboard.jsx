@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deleteProduct, fetchProducts } from "../api/product";
+import { dashboardFetchProducts, deleteProduct, fetchProducts, PAGE_SIZE } from "../api/product";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce"
@@ -15,12 +15,19 @@ export default function Dashboard() {
   const [searchValue, setSearchValue] = useState("")
   const debouncedSearch = useDebounce(searchValue, 1000)
 
+  const [page, setPage] = useState(1)
 
-  const { data: products = [], isLoading, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
+  const {data, isLoading, isFetching, error} = useQuery({
+    queryKey: ["products", page],
+    queryFn: () => dashboardFetchProducts(page, PAGE_SIZE),
+    keepPreviousData: true
+  })
+
+  const products = data?.data || [];
+  const total = Number(data?.total ?? 0);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   
+
   const handleEdit = (product) => {
     navigate("/form", { state: {product} });
   }
@@ -49,6 +56,24 @@ export default function Dashboard() {
       setViewProduct(!viewProduct)
     }
 
+  // keep `page` within valid bounds whenever totalPages changes
+  useEffect(() => {
+    // if we're currently fetching new data (including the full-count fallback),
+    // don't clamp the page — let the fetch finish and update totalPages first.
+    if (isFetching) return;
+
+    // if totalPages is not a finite positive number, reset to page 1
+    if (!Number.isFinite(totalPages) || totalPages < 1) {
+      setPage(1);
+      return;
+    }
+
+    setPage((p) => {
+      if (p < 1) return 1;
+      if (p > totalPages) return totalPages;
+      return p;
+    });
+  }, [totalPages, isFetching]);
 
 if (isLoading) return <p>Loading</p>;
 if (error) return <p>Error in fetching products</p>;
@@ -135,6 +160,15 @@ if (error) return <p>Error in fetching products</p>;
                 ))}
               </tbody>
             </table>
+            <div className="flex items-center gap-3 p-3">
+              <button type="button" onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page <= 1 || isLoading || isFetching} className="px-3 py-1 border rounded disabled:opacity-50">
+                prev
+              </button>
+              <span className="text-sm">Page {page} of {totalPages}</span>
+              <button type="button" onClick={() => setPage((p) => Math.min(p + 1, totalPages))} disabled={page >= totalPages || isLoading || isFetching} className="px-3 py-1 border rounded disabled:opacity-50">
+                next
+              </button>
+            </div>
           </div>
         </div>
       </div>
