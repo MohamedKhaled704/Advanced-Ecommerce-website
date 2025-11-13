@@ -23,6 +23,25 @@ export default function Dashboard() {
     keepPreviousData: true
   })
 
+  // query to fetch all products (used only when searching across entire dataset)
+  const {
+    data: allProductsData,
+    refetch: refetchAllProducts,
+    isFetching: isFetchingAll,
+  } = useQuery({
+    queryKey: ["allProducts"],
+    queryFn: fetchProducts,
+    enabled: false,
+  })
+
+  // when the user types a search term (debounced), fetch the full collection so we can
+  // search across all products instead of only the current page
+  useEffect(() => {
+    if (debouncedSearch && debouncedSearch.trim()) {
+      refetchAllProducts();
+    }
+  }, [debouncedSearch, refetchAllProducts]);
+
   const products = data?.data || [];
   const total = Number(data?.total ?? 0);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -47,8 +66,12 @@ export default function Dashboard() {
   }
   
 
-      const filtered = products.filter((product) => 
-        product.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+    // choose source: when there is a search term use the full collection (fetched on demand),
+    // otherwise use the current page products
+    const source = debouncedSearch.trim() ? (allProductsData || []) : products;
+
+    const filtered = source.filter((product) =>
+      String(product?.name || "").toLowerCase().includes(debouncedSearch.toLowerCase())
     );
 
     const handleView = (product) => {
@@ -160,6 +183,9 @@ if (error) return <p>Error in fetching products</p>;
                 ))}
               </tbody>
             </table>
+            {isFetchingAll && (
+              <div className="p-3 text-sm text-gray-600">Searching all products...</div>
+            )}
             <div className="flex items-center gap-3 p-3">
               <button type="button" onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page <= 1 || isLoading || isFetching} className="px-3 py-1 border rounded disabled:opacity-50">
                 prev
