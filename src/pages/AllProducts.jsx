@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProducts } from "../api/product";
 import PreHeaderVariantA from "../components/variantA/PreHeaderVariantA";
+import { Link } from "react-router-dom";
 
 export default function AllProducts() {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,8 +118,8 @@ export default function AllProducts() {
       {/* Start Page path panner */}
       <div className="mt-[18px]">
         <div className="bg-[linear-gradient(45deg,#FFE5E5_0%,#F5FFFE_100%)] text-center py-8">
-          <h2 className="uppercase font-medium text-[20px] leading-[1.6] text-[#393280]">
-            home / products
+          <h2 className="group uppercase font-medium text-[20px] leading-[1.6] text-[#393280]">
+          <Link to="/"><span className="hover:font-bold">home</span></Link> / <span className="underline">products</span>
           </h2>
         </div>
       </div>

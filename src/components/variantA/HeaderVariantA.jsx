@@ -1,11 +1,19 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export default function HeaderVariantA() {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"))
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/login");
+  }
+  const navigate = useNavigate();
   return (
     <div>
       <div className="container">
@@ -167,9 +175,13 @@ export default function HeaderVariantA() {
               <rect width="2" height="18" fill="#D1D1D1" />
             </svg>
           </li>
+          {currentUser && currentUser.role === "admin"? (<li>
+            <Link to='/dashboard' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">dashboard</Link>
+          </li>) : (
           <li>
             <Link to='' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">about us</Link>
           </li>
+          )}
           <li>
             <svg
               width="2"
@@ -181,6 +193,8 @@ export default function HeaderVariantA() {
               <rect width="2" height="18" fill="#D1D1D1" />
             </svg>
           </li>
+          {currentUser && (
+            <>
           <li>
             <Link to='/books' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">books</Link>
           </li>
@@ -195,6 +209,8 @@ export default function HeaderVariantA() {
               <rect width="2" height="18" fill="#D1D1D1" />
             </svg>
           </li>
+          </>
+ )}
           <li>
             <Link to='' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">new release</Link>
           </li>
@@ -238,7 +254,9 @@ export default function HeaderVariantA() {
             </svg>
           </li>
           <li>
-            <Link to='/dashboard' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">dash board</Link>
+            {currentUser? (
+              <button onClick={handleLogout} className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out text-[18px] font-medium uppercase tracking-wider">logout</button>
+            ) : (<Link to='/signup' className="hover:text-[#ED553B] hover:font-extrabold transition-all duration-300 ease-in-out">sign up</Link>)}
           </li>
         </ul>
       </div>

@@ -10,13 +10,28 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setError("")
+        
+        try {
+        await signInWithEmailAndPassword(auth, email, password);
 
-        signInWithEmailAndPassword(auth, email, password).then(() => {
-            navigate("/dashboard");
-        }).catch((err) => setError(err.message))
+        const registeredUser = JSON.parse(localStorage.getItem("registeredUser"))
+
+        if(registeredUser.email !== email) {
+          alert("This email does not match any registered account!");
+          return
+        }
+
+        localStorage.setItem("currentUser", JSON.stringify(registeredUser));
+
+        if(registeredUser.role === "admin") {
+          navigate("/dashboard")
+        } else {
+          navigate("/books")
+        }
+        } catch (err) { setError(err.message)}
     }
 
   return (
@@ -36,6 +51,7 @@ export default function Login() {
           <button className='capitalize bg-[#393280] text-white p-2 rounded-xl self-center'>log in</button>
         </form>
         <Link to="/signup">don’t have an account?..</Link>
+        {error && <p className='text-red-600'> please make sure that the email or password you entered is correct </p>}
         </div>
         </div>
     </div>

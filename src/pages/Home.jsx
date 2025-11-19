@@ -10,7 +10,6 @@ import Offer from '../components/variantA/Offer'
 import Subscribe from '../components/variantA/Subscribe'
 import Blogs from '../components/variantA/Blogs'
 import FooterVariantA from '../components/variantA/FooterVariantA'
-import Signup from './Signup'
 
 export default function Home() {
   return (

@@ -9,21 +9,47 @@ export default function Signup() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user")
   const [error, setError] = useState("");
 
   const emailReg = /^[A-Za-z0-9._%+-]+@bookstores\.com$/;
   const passwordReg = /^.{8,}$/;
   
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     setError("")
 
-    createUserWithEmailAndPassword(auth, email, password).then(() => {
+    if(!emailReg.test(email)) {
+      setError("Please make sure you entered a valid email");
+      return;
+    }
+
+    if(!passwordReg.test(password)) {
+      setError("please make sure you entered a valid password");
+      return;
+    }
+
+    try {
+    const userAddition = await createUserWithEmailAndPassword(auth, email, password);
+    const newUser = {
+      email,
+      uid: userAddition.user.uid,
+      role
+    };
+
+    localStorage.setItem("registeredUser", JSON.stringify(newUser));
+
       alert("Signed up successfully!");
-      navigate("/login")
-    }).catch((err) => {
-      setError(err.message)
-    })
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+      
+      if(err.code === "auth/email-already-in-use") {
+        setError("This email has used before, please try a new one")
+      } else {
+        setError("Error occurred, please try agian")
+      }
+    }
   }
 
   return (
@@ -40,19 +66,49 @@ export default function Signup() {
           </div>
         </div> */}
         <div className='min-w-[440px] max-w-[720px]'>
+          <div className='grid grid-cols-2 mt-2'>
           <h1 className='text-center capitalize font-bold text-[#393280] text-4xl tracking-wide'>signup </h1>
+          <Link to="/" className='capitalize relative bg-[#393280] text-white text-xl font-semibold justify-self-end p-2 scale-100 hover:scale-110 hover:underline'>home <span className='absolute w-[35px] h-full top-0 bg-[#393280] rounded-[10px] [clip-path:polygon(0%_0%,_70%_0%,_100%_50%,_70%_100%,_0%_100%)]'></span></Link>
+          </div>
         <form action="" onSubmit={handleSignup} className='mt-10 flex flex-col gap-y-4'>
           <div className='flex flex-col gap-y-2'>
             <label htmlFor="email" className='capitalize text-gray-700'>email <span className='lowercase opacity-50 text-[14px]'>(ending with "@bookstores.com")</span></label>
-            <input type="text" id="email" onChange={(e) => setEmail(e.target.value)} placeholder='Create your email like "example@bookstores.com"' className='px-1 py-2 text-[#393280] outline-none border border-[#393280] rounded-xl placeholder:text-[#393280]  placeholder:opacity-60 placeholder:text-[14px] placeholder:font-semibold' />
+            <input type="text" id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Create your email like "example@bookstores.com"' className='px-1 py-2 text-[#393280] outline-none border border-[#393280] rounded-xl placeholder:text-[#393280]  placeholder:opacity-60 placeholder:text-[14px] placeholder:font-semibold' />
           </div>
           <div className='flex flex-col gap-y-2'>
             <label htmlFor="password" className='capitalize text-gray-700'>password <span className='lowercase opacity-50 text-[14px]'>(at least "8" characters)</span></label>
-            <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} placeholder='Set your password...' className='px-1 py-2 text-[#393280] outline-none border border-[#393280] rounded-xl placeholder:text-[#393280] placeholder:opacity-60 placeholder:text-[14px] placeholder:font-semibold' />
+            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder='Set your password...' className='px-1 py-2 text-[#393280] outline-none border border-[#393280] rounded-xl placeholder:text-[#393280] placeholder:opacity-60 placeholder:text-[14px] placeholder:font-semibold' />
           </div>
+          <div className="flex flex-col gap-y-2 mt-3">
+  <span className="text-gray-700 capitalize">choose your role:</span>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="role"
+      value="user"
+      checked={role === "user"}
+      onChange={(e) => setRole(e.target.value)}
+    />
+    <span>User</span>
+  </label>
+
+  <label className="flex items-center gap-2">
+    <input
+      type="radio"
+      name="role"
+      value="admin"
+      checked={role === "admin"}
+      onChange={(e) => setRole(e.target.value)}
+    />
+    <span>Admin</span>
+  </label>
+</div>
+
           <button className='capitalize bg-[#393280] text-white p-2 rounded-xl self-center'>create account</button>
         </form>
         <Link to="/login">already have an account?..</Link>
+        {error && <p className='text-red-600'> {error} </p>}
         </div>
       </div>  
     </div>
