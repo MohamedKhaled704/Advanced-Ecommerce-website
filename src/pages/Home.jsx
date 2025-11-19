@@ -15,7 +15,7 @@ import Signup from './Signup'
 export default function Home() {
   return (
     <div>
-        {/* <PreHeaderVariantA />
+        <PreHeaderVariantA />
         <HeaderVariantA />
         <HeroVariantA />
         <CategoriesVariantA />
@@ -25,8 +25,7 @@ export default function Home() {
         <Offer />
         <Subscribe />
         <Blogs />
-        <FooterVariantA /> */}
-        <Signup />
+        <FooterVariantA />
     </div>
   )
 }
